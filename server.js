@@ -46,13 +46,9 @@ const data = {
     })
 }
 
-app.get("/test",(req,res) => {
+app.get("/t",(req,res) => {
     return res.json(
-        {
-            headers:data.headers,
-            rows:shuffleArray(data.rows),
-            lastUpdated:new Date().toISOString()
-        }
+       'ShopCart Admin Pannel'
     )
 })
 
