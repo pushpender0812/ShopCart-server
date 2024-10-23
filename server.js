@@ -57,9 +57,9 @@ app.use("/admin",adminRoutes)
 
 app.use("/api",apiRoutes);
 
- 
+ const PORT = process.env.PORT || 3000
 
  
-app.listen(3000,() => {
+app.listen(PORT,() => {
     console.log("Server running at port 3000");
 })
