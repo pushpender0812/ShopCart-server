@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Product Category</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+</head>
+<body>
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h1>View Product Category</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item">Category</li>
+                    <li class="breadcrumb-item active">View Product Category</li>
+                </ol>
+            </nav>
+        </div>
+        <!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">View Product Category</h5>
+
+                            <div class="container mt-5">
+                                <table id="productsTable" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.NO.</th>
+                                            <th>Product Name</th>
+                                            <th>Product Price</th>
+                                            <th>Product Description</th>
+                                            <th>Product Image</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Description Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="descriptionModalLabel">Product Description</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalDescriptionContent">
+                    <!-- Product description will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#productsTable').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: '/admin/user/product/get-products-data',
+                    type: 'GET',
+                    dataSrc: function(json) {
+                        return json.data;
+                    }
+                },
+                columns: [
+                    { data: 'sNo' },
+                    { data: 'product_name' },
+                    { data: 'product_price' },
+                    { data: 'product_description' },
+                    { data: 'image' },
+                    { data: 'actions' }
+                ],
+                columnDefs: [
+                    {
+                        targets: 3,
+                        render: function(data, type, row) {
+                            return `
+                                ${data.substring(0, 50)}... 
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#descriptionModal" onclick="showDescription('${data.replace(/'/g, "\\'")}')">
+                                    View
+                                </button>`;
+                        }
+                    },
+                    {
+                        targets: 4,
+                        render: function(data, type, row) {
+                            return `<img src="http://localhost:3000/uploads/${data}" alt="${row.product_name}" width="100">`;
+                        }
+                    },
+                    {
+                        targets: 5,
+                        render: function(data, type, row) {
+                            return `
+                                <a href="/admin/user/product/get-product/${row._id}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="/admin/user/product/delete-product/${row._id}">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </a>`;
+                        }
+                    }
+                ]
+            });
+        });
+
+        function showDescription(description) {
+            document.getElementById('modalDescriptionContent').innerText = description;
+        }
+    </script>
+</body>
+</html>

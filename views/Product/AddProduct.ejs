@@ -1,0 +1,149 @@
+<main id="main" class="main">
+  <div class="pagetitle">
+    <h1>Add Product</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item">Product</li>
+        <li class="breadcrumb-item active">Add Product Category</li>
+      </ol>
+    </nav>
+  </div>
+  <!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Add Product</h5>
+
+            <form
+              class="row g-3"
+              action="/admin/user/product/add-product"
+              method="POST"
+              enctype="multipart/form-data"
+            >
+            <div class="form-group">
+              <label>Select Category</label>
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                id="parentDropdown"
+                name="categories"
+                onchange="updateDropdown($(this).val(), $('#childDropdown'))"
+              >
+                <option disabled selected>Select Category</option>
+                <% data.forEach((parent)=>{%>
+                <option value="<%= parent._id%>">
+                  <%= parent.category_name%>
+                </option>
+                <%})%>
+              </select>
+              <div class="err" style="color: red;"></div>
+            </div>
+            <div class="form-group">
+              <div id="childDropdown"></div>
+            </div>
+
+             
+              <div id="productDetails" class="col-12">
+                <div class="col-12">
+                  <label for="product_name" class="form-label">Product Name</label>
+                  <input type="text" class="form-control" id="product_name" name="product_name" required />
+                </div>
+                <div class="col-12">
+                  <label for="product_price" class="form-label">Product Price</label>
+                  <input type="number" class="form-control" id="product_price" name="product_price" required />
+                </div>
+                <div class="col-12">
+                  <label for="product_description" class="form-label">Product Description</label>
+                  <textarea class="form-control" id="product_description" name="product_description" rows="3" required></textarea>
+                </div>
+                <div class="col-12">
+                  <label for="productImage" class="form-label">Product Image</label>
+                  <input type="file" class="form-control" id="productImage" name="product_image" />
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<!-- End #main -->
+
+<script>
+  function updateDropdown(parentID, containerDiv) {
+    if (parentID !== null) {
+      fetch(`/admin/user/product/get-categories?parentID=${parentID}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if(data.length===0)
+          {
+            //if child element is not found
+            containerDiv.html("");
+          }
+          if (data.length > 0) {
+
+            // No child categories found, remove existing child dropdown elements
+            containerDiv.nextAll().remove();
+
+            // Create a new select element
+            const select = $(`
+              <select class='form-select' name="categories">
+                <option disabled selected>Select ${containerDiv.data("level")} Category</option>
+              </select>
+            `);
+
+            // Populate the new select element with options
+            data.forEach((child) => {
+              select.append(
+                `<option value="${child._id}">${child.category_name}</option>`
+              );
+            });
+
+            // Empty the containerDiv and append the new select element
+            containerDiv.empty();
+            containerDiv.append(
+              `<br/><label>${containerDiv.data("level")} Category</label>`
+            );
+            containerDiv.append(select);
+
+            // Add event listener for category change
+            select.on("change", function () {
+              const selectedCategory = $(this).val();
+              const newContainerDiv = $(
+                `<div id="${selectedCategory}"></div>`
+              );
+              //.data(name,value)
+              newContainerDiv.data("level", containerDiv.data("level") + 1);
+
+              containerDiv.after(newContainerDiv);
+              updateDropdown(selectedCategory, newContainerDiv);
+            });
+          } else {
+            // No child categories found, remove existing child dropdown elements
+            containerDiv.nextAll().remove();
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    } else {
+      // If 'Select Category' is selected in the parent dropdown, remove all child dropdown elements
+      containerDiv.html("");
+    }
+  }
+
+  // Initial call to set up the first dropdown
+  $(document).ready(function () {
+    const initialContainerDiv = $("#childDropdown");
+    initialContainerDiv.data("level", "Sub");
+    updateDropdown($("#parentDropdown").val(), initialContainerDiv);
+  });</script>

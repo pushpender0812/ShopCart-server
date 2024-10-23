@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Coupons</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  </head>
+  <body>
+    <main id="main" class="main">
+      <div class="pagetitle">
+        <h1>View Coupons</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">Coupons</li>
+            <li class="breadcrumb-item active">View Coupons</li>
+          </ol>
+        </nav>
+      </div>
+      <!-- End Page Title -->
+
+      <section class="section">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Coupons List</h5>
+
+                <div class="table-responsive">
+                  <table id="couponTable" class="display">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Coupon Name</th>
+                        <th>Coupon Value</th>
+                        <th>Expire Date</th>
+                        <th>Coupon Type</th>
+                        <th>Maximum Discount</th>
+                        <th>Minimum Cart Value</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- End #main -->
+
+    <script>
+      $(document).ready(function () {
+        $("#couponTable").DataTable({
+          serverSide: true,
+          ajax: {
+            url: "/admin/user/coupon/get-coupons-data",
+            type: "GET",
+            dataSrc: function (json) {
+              return json.data;
+            },
+          },
+          columns: [
+            { data: "sNo" },
+            { data: "coupon_name" },
+            { data: "coupon_value" },
+            { data: "expire_date" },
+            { data: "coupon_type" },
+            { data: "maximum_discount" },
+            { data: "min_cart" },
+            { data: "actions" },
+          ],
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Orders</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <main id="main" class="main">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col">
+                    <div class="pagetitle">
+                        <h1>Pending Orders</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item">Orders</li>
+                                <li class="breadcrumb-item active">Pending Orders</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- End Page Title -->
+
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Pending Orders List</h5>
+
+                                <div class="table-responsive">
+                                    <table id="pendingOrdersTable" class="table table-bordered display">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Order ID</th>
+                                                <th>User Name</th>
+                                                <th>User Email</th>
+                                                <th>Phone</th>
+                                                <th>Product Name</th>
+                                                <th>Quantity</th>
+                                                <th>Total Price</th>
+                                                <th>Coupon Used</th>
+                                                <th>Order Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- End #main -->
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#pendingOrdersTable').DataTable({
+                serverSide: true,
+                ajax: {
+                    url: '/admin/user/orders/get-pending-orders-data',
+                    type: 'GET',
+                    dataSrc: function(json) {
+                        return json.data;
+                    }
+                },
+                columns: [
+                    { data: 'sNo' },
+                    { data: 'razorpay_order_id' },
+                    { data: 'user_name' },
+                    { data: 'user_email' },
+                    { data: 'user_phone' },
+                    { data: 'product_name' },
+                    { data: 'quantity' },
+                    { data: 'total_price' },
+                    { data: 'coupon_used' },
+                    { data: 'order_status' },
+                    { data: 'actions' }
+                ]
+            });
+        });
+    </script>
+</body>
+</html>

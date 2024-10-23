@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>View Sub Category</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Category</li>
+          <li class="breadcrumb-item active">View Sub Category</li>
+        </ol>
+      </nav>
+    </div>
+    <!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">View Sub Category </h5>
+  
+              <!-- Vertical Form -->
+              <div class="container mt-5">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>Category Name</th>
+                            <th>Category Image</th>
+                           
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach((element,index) => { %>
+                            <tr>
+                                <td><%= ++index%></td>
+                                <td><%= element.category_name %></td>
+                                <td><img src="http://localhost:3000/uploads/<%= element.image %>" alt="<%= element.category_name %>" width="100"></td>
+                              
+                                <td>
+                                    <a href="/admin/user/category/get-category/<%= element._id %>" class="btn btn-warning btn-sm">Edit</a>
+                                    <a href="/admin/user/category/addtoSub-category/<%= element._id %>" class="btn btn-warning btn-sm">Add Sub</a>
+                                    <% if (element.toView !== false) { %>
+                                      <a href="/admin/user/category/viewSub-category/<%= element._id %>" class="btn btn-warning btn-sm">View Sub</a>
+                                    <% } %>
+
+                                    <% if (element.todelete === true) { %>
+                                      
+                                      <a href="/admin/user/category/delete/<%= element._id %>">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                      </a>   
+                                    <% } %>
+
+                                    
+                                  
+                                               
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

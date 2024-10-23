@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Category</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+</head>
+<body>
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>View Category</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Category</li>
+          <li class="breadcrumb-item active">View Category</li>
+        </ol>
+      </nav>
+    </div>
+    <!-- End Page Title -->
+  
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">View Category </h5>
+  
+              <!-- Vertical Form -->
+              <div class="container mt-5">
+                <table id="categoryTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.NO.</th>
+                            <th>Category Name</th>
+                            <th>Category Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#categoryTable').DataTable({
+        serverSide: true,
+        ajax: {
+          url: '/admin/user/category/get-categories-data',
+          type: 'GET',
+          dataSrc: function(json) {
+            return json.data;
+          }
+        },
+        columns: [
+          { data: 'sNo' },
+          { data: 'category_name' },
+          { data: 'image' },
+          { data: 'actions' }
+        ],
+        columnDefs: [
+          {
+            targets: 2,
+            render: function(data, type, row) {
+              return `<img src="http://localhost:3000/uploads/${data}" alt="${row.category_name}" width="100">`;
+            }
+          },
+          {
+            targets: 3,
+            render: function(data, type, row) {
+              let actionButtons = `
+                <a href="/admin/user/category/get-category/${row._id}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="/admin/user/category/addtoSub-category/${row._id}" class="btn btn-warning btn-sm">Add Sub</a>`;
+              if (row.toView !== false) {
+                actionButtons += `<a href="/admin/user/category/viewSub-category/${row._id}" class="btn btn-warning btn-sm">View Sub</a>`;
+              }
+              if (row.todelete === true) {
+                actionButtons += `
+                  <a href="/admin/user/category/delete/${row._id}">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </a>`;
+              }
+              return actionButtons;
+            }
+          }
+        ]
+      });
+    });
+  </script>
+</body>
+</html>

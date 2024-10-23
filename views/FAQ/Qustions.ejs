@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequenty Asked questions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <main id="main" class="main">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col">
+                    <div class="pagetitle">
+                        <h1>Frequenty Asked questions</h1>
+                        <nav>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item">FAQ</li>
+                                <li class="breadcrumb-item active">Asked Questions by the User</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <!-- End Page Title -->
+
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">FAQ</h5>
+                    
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>User ID</th>
+                                                <th>User Name</th>
+                                                <th>Category Name</th>
+                                                <th>Question</th>
+                                                <th>Answer</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (data && data.length > 0) { %>
+                                                <% data.forEach((faq, index) => { %>
+                                                    <tr>
+                                                        <td><%= index + 1 %></td>
+                                                        <td><%= faq.userDetails._id %></td>
+                                                        <td><%= faq.userDetails.name %></td>
+                                                        <td><%= faq.category_name %></td>
+                                                        <td>
+                                                            <%= faq.question.substring(0, 50) %>...
+                                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#questionModal" onclick="showQuestion('<%= faq.question.replace() %>')">View</button>
+                                                        </td>
+                                                        <td>
+                                                            <%= faq.answer ? faq.answer.substring(0, 50) : '' %>...
+                                                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#answerModal" onclick="showAnswer('<%= faq.answer %>')">View</button>
+                                                        </td>
+                                                        <td>
+                                                            <% if (faq.isAnswered === false) { %>
+                                                                <form action="/admin/user/faq/answer/<%= faq._id %>" method="GET" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-primary btn-sm">Answer</button>
+                                                                </form>
+                                                            <% } %>
+                                                            <% if (faq.isAnswered === true) { %>
+                                                                <form action="/admin/user/faq/answer-update/<%= faq._id %>" method="GET" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-secondary">Update Answer</button>
+                                                                </form>
+                                                                <br><br>
+                                                                <form action="/admin/user/faq/answer-delete/<%= faq._id %>" method="GET" style="display:inline;">
+                                                                    <button type="submit" class="btn btn-danger btn-sm">Delete Answer</button>
+                                                                </form>
+                                                            <% } %>
+                                                        </td>
+                                                    </tr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="7" class="text-center">No questions found</td>
+                                                </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                    
+                            </div>
+                        </div>
+                    </section>
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Question Modal -->
+    <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="questionModalLabel">Question</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalQuestionContent">
+                    <!-- Question content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Answer Modal -->
+    <div class="modal fade" id="answerModal" tabindex="-1" role="dialog" aria-labelledby="answerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="answerModalLabel">Answer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalAnswerContent">
+                    <!-- Answer content will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function showQuestion(question) {
+            document.getElementById('modalQuestionContent').innerText = question;
+        }
+
+        function showAnswer(answer) {
+            document.getElementById('modalAnswerContent').innerText = answer;
+        }
+    </script>
+</body>
+</html>

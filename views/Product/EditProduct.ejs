@@ -1,0 +1,65 @@
+<main id="main" class="main">
+
+    <div class="pagetitle">
+    
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Product</li>
+          <li class="breadcrumb-item active">View Product</li>
+          <li class="breadcrumb-item active">Edit Product</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Edit Product</h5>
+                  
+                  <!-- Vertical Form -->
+
+                  
+                  <form class="row g-3" action="/admin/user/product/update-product/<%= data._id%>" method="POST" enctype="multipart/form-data">
+                   
+                    <!-- <div class="col-12">
+                        <label for="inputNanme4" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" value="" id="inputNanme4" name="product_name" >
+                      </div> -->
+                   
+                   
+                    <div class="col-12">
+                      <label for="inputNanme4" class="form-label">Product Name</label>
+                      <input type="text" class="form-control" value="<%= data.product_name%>" id="inputNanme4" name="product_name" >
+                    </div>
+                    <div class="col-12">
+                        <label for="inputNanme4" class="form-label">Product Price</label>
+                        <input type="text" class="form-control" value="<%= data.product_price%>" id="inputNanme4" name="product_price" >
+                      </div>
+                      <div class="col-12">
+                        <label for="inputNanme4" class="form-label">Product Description</label>
+                        <input type="text" class="form-control" value="<%= data.product_description%>" id="inputNanme4" name="product_description" >
+                      </div>
+                    <div class="col-12">
+                      <label for="inputEmail4" class="form-label">Image</label>
+                      <input type="file" class="form-control" id="inputEmail4"  name="image" >
+                    </div>
+                   
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Update</button>
+                      <button type="reset" class="btn btn-secondary">Reset</button>
+                    </div>
+                  </form><!-- Vertical Form -->
+    
+                </div>
+              </div>
+
+         
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->

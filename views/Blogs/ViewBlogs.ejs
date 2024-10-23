@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Blogs</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>View Blogs</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item">Blogs</li>
+          <li class="breadcrumb-item active">View Blogs</li>
+        </ol>
+      </nav>
+    </div>
+    <!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">View Blogs</h5>
+
+              <div class="container mt-5">
+                <table id="blogsTable" class="table table-bordered display">
+                  <thead>
+                    <tr>
+                      <th>S.NO.</th>
+                      <th>Author Name</th>
+                      <th>Blog Name</th>
+                      <th>Blog Category</th>
+                      <th>Blog Image</th>
+                      <th>Blog Description</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" role="dialog" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="descriptionModalLabel">Blog Description</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="modalDescriptionContent">
+            <!-- Blog description will be inserted here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#blogsTable').DataTable({
+        serverSide: true,
+        ajax: {
+          url: '/admin/user/blog/get-blogs-data',
+          type: 'GET',
+          dataSrc: function(json) {
+            if (json.data) {
+              return json.data.map((item, index) => {
+                return {
+                  sNo: index + 1,
+                  ...item
+                };
+              });
+            }
+            return [];
+          }
+        },
+        columns: [
+          { data: 'sNo' },
+          { data: 'author_name' },
+          { data: 'blog_name' },
+          { data: 'blog_category' },
+          { data: 'blog_image' },
+          { data: 'blog_description' },
+          { data: 'actions' }
+        ],
+        columnDefs: [
+          {
+            targets: 4,
+            render: function(data, type, row) {
+              return `<img src="http://localhost:3000/uploads/${data}" alt="${row.blog_name}" width="100">`;
+            }
+          },
+          {
+            targets: 5,
+            render: function(data, type, row) {
+              return `
+                ${data.substring(0, 0)}
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#descriptionModal" onclick="showDescription('${data.replace(/'/g, "\\'")}')">
+                  <i class="fas fa-eye"></i>
+                </button>`;
+            }
+          },
+          {
+            targets: 6,
+            render: function(data, type, row) {
+              return `
+                <a href="/admin/user/blog/edit-blog/${row._id}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="/admin/user/blog/delete-blog/${row._id}" class="btn btn-danger btn-sm">Delete</a>`;
+            }
+          }
+        ]
+      });
+    });
+
+    function showDescription(description) {
+      document.getElementById('modalDescriptionContent').innerText = description;
+    }
+  </script>
+</body>
+</html>

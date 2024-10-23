@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <% if (data) { %>
+       
+    
+        <section class="section" style="margin-left: 310px; margin-top: 90px;">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"> Orders List</h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Order ID</th>
+                                    <th>User Name</th>
+                                    <th>User Email</th>
+                                    <th>Phone</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Coupon Used</th>
+                                    <th>Order Status</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (data && data.length > 0) { %>
+                                    <% data.forEach((order, index) => { %>
+                                        <% order.product_id.forEach((productId, pIndex) => { %>
+                                            <tr>
+                                                <% if (pIndex === 0) { %>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= index + 1 %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.razorpay_order_id %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.userResult.name %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.userResult.email %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.userResult.phone %></td>
+                                                <% } %>
+                                                <td>
+                                                    <% let product = order.productResult.find(p => p._id.toString() === productId.toString()); %>
+                                                    <%= product ? product.product_name : 'Product Not Found' %>
+                                                </td>
+                                                <td><%= order.total_quantity[pIndex].quantity %></td>
+                                                <% if (pIndex === 0) { %>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.total_price %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.couponResult ? order.couponResult.coupon_name : 'N/A' %></td>
+                                                    <td rowspan="<%= order.product_id.length %>"><%= order.order_status %></td>
+                                                   
+                                                <% } %>
+                                            </tr>
+                                        <% }) %>
+                                    <% }) %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="11" class="text-center">No pending orders found</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+  
+  
+  
+        <% } %>
+
+    <% if (!data) { %>
+     <h1 style="margin: 350px;"> Not Any Approved Order By User</h1>
+    <% } %>
+   
+</body>
+</html>
