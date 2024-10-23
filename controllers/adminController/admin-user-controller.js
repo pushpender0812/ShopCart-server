@@ -18,6 +18,10 @@ const Login = async (req, res) => {
       return res.status(400).send("invalid login email");
     }
 
+    if (useremail.type !== 'Admin') {
+      return res.status(400).send("You Are Not Admin");
+    }
+
     const isMatch = await bcrypt.compare(password, useremail.password);
 
     // console.log(process.env.SECRET_KEY);
