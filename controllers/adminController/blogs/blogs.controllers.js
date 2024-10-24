@@ -14,6 +14,7 @@ const addblogPage = async (req, res) => {
 };
 
 const blogData = async (req, res) => {
+ try {
   const { author_name, blog_name, blog_description, blog_category } = req.body;
  
   const blog_image = req.file.filename;
@@ -28,6 +29,10 @@ const blogData = async (req, res) => {
   });
   await datablog.save();
   res.redirect("/admin/user/blog/add-blog");
+ } catch (error) {
+  console.log(`Error adding blog ${error}`);
+  
+ }
 };
 
 const viewBlogs = async (req, res) => {
