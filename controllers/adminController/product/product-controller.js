@@ -27,6 +27,8 @@ const addproductCategory = async(req,res) => {
 
 
         const image = req.file.filename;
+        console.log(req.body,image,'checking at adding product');
+        
 
         const productCategory = new Product({
             categories:req.body.categories,
